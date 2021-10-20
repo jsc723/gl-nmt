@@ -1,0 +1,29 @@
+FROM ubuntu:18.04
+RUN apt update
+RUN apt-get -y install build-essential
+RUN apt-get install libxml2-dev < 'Y\n2\n85\n1\n1\n'
+RUN apt -y install wget git vim
+WORKDIR /opt
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
+RUN sh Miniconda3-py39_4.10.3-Linux-x86_64.sh
+RUN source /root/.bashrc
+RUN echo 'y' | conda create --name nmt
+RUN conda activate nmt
+RUN echo 'y' | conda install pytorch==1.6.0 torchvision==0.7.0 cpuonly -c pytorch
+RUN echo 'y' | conda install -c pytorch torchtext=0.7.0
+RUN echo 'y' | conda install -c conda-forge configargparse=1.5.3
+RUN echo 'y' | conda install -c conda-forge flask=2.0.2
+RUN echo 'y' | conda install -c conda-forge waitress=2.0.0
+WORKDIR /root
+RUN git clone https://github.com/jsc723/gl-nmt.git
+COPY ../available_models /root/gl-nmt/available_models
+RUN wget http://www.phontron.com/kytea/download/kytea-0.4.7.tar.gz
+RUN tar -xzf kytea-0.4.7.tar.gz
+WORKDIR /root/kytea-0.4.7/
+RUN chmod +x configure
+RUN ./configure
+RUN make
+RUN make install
+RUN echo "export LD_LIBRARY_PATH=/usr/local/lib" >> /root/.bashrc
+RUN source /root/.bashrc
+CMD ["python", "/root/gl-nmt/server.py", "--port", "8889"]
