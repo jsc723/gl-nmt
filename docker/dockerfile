@@ -1,7 +1,8 @@
 FROM ubuntu:18.04
+EXPOSE 8889
 RUN apt update
 RUN apt-get -y install build-essential
-RUN apt-get install libxml2-dev < 'Y\n2\n85\n1\n1\n'
+RUN apt-get -y install libxml2-dev < '2\n85\n1\n1\n'
 RUN apt -y install wget git vim
 WORKDIR /opt
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
@@ -17,6 +18,7 @@ RUN echo 'y' | conda install -c conda-forge waitress=2.0.0
 WORKDIR /root
 RUN git clone https://github.com/jsc723/gl-nmt.git
 COPY ../available_models /root/gl-nmt/available_models
+COPY conf.json /root/gl-nmt/available_models
 RUN wget http://www.phontron.com/kytea/download/kytea-0.4.7.tar.gz
 RUN tar -xzf kytea-0.4.7.tar.gz
 WORKDIR /root/kytea-0.4.7/
