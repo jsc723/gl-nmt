@@ -734,6 +734,12 @@ class ServerModel(object):
                         self.model_root, value)
             tokenizer = pyonmttok.Tokenizer(mode,
                                             **tokenizer_params)
+        elif tokenizer_opt['type'] == 'kytea':
+            import onmt.translate.jp_tokenizer
+            kytea_root = os.path.join(self.model_root,
+                                        tokenizer_opt['root'])
+            model_path = os.path.join(kytea_root, tokenizer_opt['model'])
+            tokenizer = onmt.translate.jp_tokenizer.KyteaTokenizer(kytea_root, model_path)
         else:
             raise ValueError("Invalid value for tokenizer type")
         return tokenizer
@@ -767,6 +773,8 @@ class ServerModel(object):
         elif self.tokenizers_opt[side]["type"] == "pyonmttok":
             tok, _ = self.tokenizers[side].tokenize(sequence)
             tok = " ".join(tok)
+        elif self.tokenizers_opt[side]["type"] == "kytea":
+            tok = self.tokenizers[side].tokenize(sequence)
         return tok
 
     def tokenizer_marker(self, side='src'):
@@ -782,6 +790,8 @@ class ServerModel(object):
                     elif params.get("spacer_annotate", None) is not None:
                         marker = 'spacer'
             elif tokenizer_type == "sentencepiece":
+                marker = 'spacer'
+            elif tokenizer_type == "kytea":
                 marker = 'spacer'
         return marker
 
@@ -828,6 +838,8 @@ class ServerModel(object):
         if self.tokenizers_opt[side]["type"] == "sentencepiece":
             detok = self.tokenizers[side].DecodePieces(sequence.split())
         elif self.tokenizers_opt[side]["type"] == "pyonmttok":
+            detok = self.tokenizers[side].detokenize(sequence.split())
+        elif self.tokenizers_opt[side]["type"] == "kytea":
             detok = self.tokenizers[side].detokenize(sequence.split())
 
         return detok

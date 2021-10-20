@@ -1,0 +1,23 @@
+{
+    "models_root": "./available_models",
+    "models": [
+        {
+            "id": 100,
+            "model": "brnn3_5_step_20000.pt",
+            "timeout": 60,
+            "on_timeout": "to_cpu",
+            "load": true,
+            "opt": {
+                "gpu": 0,
+                "beam_size": 5,
+                "replace_unk": true,
+                "phrase_table": "dict-utf8.txt"
+            },
+            "tokenizer": {
+                "type": "kytea",
+                "root": "kytea-win-0.4.2",
+                "model": "model.bin"
+            }
+        }
+    ]
+}
