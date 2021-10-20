@@ -12,7 +12,7 @@ class KyteaTokenizer(object):
             print('kytea model path:' + os.path.abspath(model_path))
             args.extend(['-model', os.path.abspath(model_path)])
         self.p = subprocess.Popen(args,
-            shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf-8')
+                    stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf-8')
 
         
     def tokenize(self, text):
