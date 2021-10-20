@@ -737,8 +737,9 @@ class ServerModel(object):
         elif tokenizer_opt['type'] == 'kytea':
             import onmt.translate.jp_tokenizer
             kytea_root = os.path.join(self.model_root,
-                                        tokenizer_opt['root'])
-            model_path = os.path.join(kytea_root, tokenizer_opt['model'])
+                                        tokenizer_opt['root']) if 'root' in tokenizer_opt else None
+            model_path = os.path.join(kytea_root,
+                                        tokenizer_opt['model']) if 'model' in tokenizer_opt else None
             tokenizer = onmt.translate.jp_tokenizer.KyteaTokenizer(kytea_root, model_path)
         else:
             raise ValueError("Invalid value for tokenizer type")

@@ -4,10 +4,14 @@ import time
 
 class KyteaTokenizer(object):
     def __init__(self, kytea_root, model_path):
-        exe = os.path.join(kytea_root, 'kytea.exe')
-        print('kytea exe path:' + os.path.abspath(exe))
-        print('kytea model path:' + os.path.abspath(model_path))
-        self.p = subprocess.Popen([os.path.abspath(exe), '-model', os.path.abspath(model_path), '-notags'],
+        exe = os.path.abspath(os.path.join(kytea_root, 'kytea.exe')) if kytea_root else 'kytea'
+        args = [exe, '-notags']
+        if kytea_root:
+            print('kytea exe path:' + exe)
+        if model_path:
+            print('kytea model path:' + os.path.abspath(model_path))
+            args.extend(['-model', os.path.abspath(model_path)])
+        self.p = subprocess.Popen(args,
             shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf-8')
 
         
